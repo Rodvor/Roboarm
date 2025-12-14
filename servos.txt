@@ -1,0 +1,9 @@
+base;1;270;500;2500;145;-100;100;false;none
+shoulder1;2;180;500;2500;90;-90;90;false;shoulder
+shoulder2;3;270;500;2500;139;-90;90;true;shoulder
+elbow1;4;270;500;2500;126.5;-90;90;false;elbow
+elbow2;5;270;500;2500;143.1;-90;90;true;elbow
+forearm;6;270;500;2500;135;-90;90;false;none
+wrist;7;270;500;2500;137;-90;90;false;none
+end_effector_base;8;270;500;2500;129;-125;125;false;none
+end_effector;9;270;500;2500;0;0;90;false;none

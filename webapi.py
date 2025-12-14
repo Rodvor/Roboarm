@@ -1,36 +1,41 @@
-from flask import Flask, request, render_template
-import serial
-import glob
-
-possible_ports = glob.glob('/dev/tty.usbserial-*')
-
-if len(possible_ports) == 0:
-    print("Arduino not connected!")
-    exit()
-
-port = possible_ports[0]
-
-arduino = serial.Serial(port=port, baudrate=115200, timeout=1)
-print(f"Detected Arduino at '{port}'")
-
+from flask import Flask, render_template, request, jsonify
+from ServoController import ServoController
 
 app = Flask(__name__)
 
+servo_controller = ServoController()
+servo_controller.auto_detect_arduino()
+
+SERVO_NAMES = [
+    "base",
+    "shoulder",
+    "elbow",
+    "forearm",
+    "wrist",
+    "end_effector_base"
+]
+
+
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", servos=SERVO_NAMES)
 
-@app.route("/move")
-def move_servo():
-    try:
-        servo = int(request.args.get("servo", 1))
-        angle = int(request.args.get("angle", 90))
-        speed = int(request.args.get("speed", 2))
-        command = f"MOVE {servo} {angle} {speed}\n"
-        arduino.write(command.encode())
-        return "OK"
-    except Exception as e:
-        return str(e), 400
+
+@app.route("/move", methods=["POST"])
+def move():
+    data = request.json
+
+    angles = {}
+    for name in SERVO_NAMES:
+        if name in data:
+            angles[name] = int(data[name])
+
+    duration = float(data.get("duration", 3))
+
+    servo_controller.third_order_move(angles, duration)
+
+    return jsonify({"status": "ok"})
+
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=6969)
+    app.run(host="0.0.0.0", port=6969, debug=False)

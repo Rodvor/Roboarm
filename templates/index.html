@@ -1,13 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Robot Arm Servo Control</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <meta charset="UTF-8">
+    <title>Servo Controller</title>
+    <script src="/static/script.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        .servo {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+        }
+        input[type="range"] {
+            width: 300px;
+        }
+        button {
+            margin-top: 30px;
+            padding: 10px 25px;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Robot Arm Servo Control</h1>
-    <div id="servoControls"></div>
-    <p id="status">Adjust sliders to control servos.</p>
+
+<h1>Servo Control Panel</h1>
+
+{% for servo in servos %}
+<div class="servo">
+    <label for="{{ servo }}">{{ servo }}</label>
+    <input type="range" min="-90" max="90" value="0" id="{{ servo }}">
+    <span id="{{ servo }}_value">0</span>°
+</div>
+{% endfor %}
+
+<div class="servo">
+    <label for="duration">Move duration (seconds)</label>
+    <input type="number" id="duration" value="3" step="0.5" min="0.5">
+</div>
+
+<button onclick="sendMove()">Move servos</button>
+
 </body>
 </html>
