@@ -1,5 +1,8 @@
 from ServoController import ServoController
-
+import numpy as np
+from kinematics import *
+from numpy import pi
+from time import sleep
 
 def main():
 
@@ -60,11 +63,78 @@ def main():
     
     input("Press enter to continue")
 
+    inverse_kinematics_test(servo_controller)
+
+    return
     servo_controller.third_order_move(first, 5)
     servo_controller.third_order_move(second, 5)
     servo_controller.third_order_move(zero, 5)    
     
 
+def inverse_kinematics_test(servo_controller: ServoController):
+
+    zero = {"base": 0,
+            "shoulder": 0,
+            "elbow": 0,
+            "forearm": 0,
+            "wrist": 0,
+            "end_effector_base": 0}
+
+    robot = my_robot()
+    previous_coordinates = [300, -300, 500, 0, 0, 0]
+
+    inverse_kinematics_move(servo_controller, robot, cartesian_to_matrix(previous_coordinates), 3)
+
+    while True:
+
+        try:
+            x = int(input("x: "))
+            y = int(input("y: "))
+            z = int(input("z: "))
+        except:
+            break
+        
+        coordinates = [x, y, z, 0, 0, 0]
+
+        for i in range(100):
+            
+            das_interpol = interpolate(previous_coordinates, coordinates, i/100)
+
+            inverse_kinematics_move(servo_controller, robot, cartesian_to_matrix(das_interpol))
+
+            sleep(0.05)
+        
+        previous_coordinates = coordinates
+
+    
+
+    servo_controller.third_order_move(zero, 4)
+
+
+def inverse_kinematics_move(servo_controller, robot, coordinates, time = 0):
+
+    q = robot.ikine(coordinates)
+    servo_data = convert_to_servo_data(q.evalf(10))
+    print_servo_data(servo_data)
+
+    if time == 0:
+        servo_controller.move_servos(servo_data)
+    else:
+        servo_controller.third_order_move(servo_data, time)
+
+
+def print_servo_data(servo_data):
+
+    for servo in servo_data.keys():
+
+        print(f"> {servo}: {servo_data[servo]}°")
+
+def interpolate(start, end, t):
+    """
+    Linearly interpolate between start and end by fraction t (0 to 1),
+    returning a list of floats.
+    """
+    return [s + (e - s) * t for s, e in zip(start, end)]
 
 
 

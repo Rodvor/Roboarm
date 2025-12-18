@@ -139,6 +139,15 @@ class ServoController():
                 self.third_order_step(servo_name, my_timer.seconds())
 
             sleep(0.01)
+
+    def move_servos(self, servo_data):
+        """
+        servo_data = {name : angle}
+        """
+
+        for servo_name in servo_data.keys():
+
+            self.move_servo(servo_name, servo_data[servo_name], -1)
         
 
     
