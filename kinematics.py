@@ -41,6 +41,29 @@ class Robot:
         self.has_tool = True
         self.tool_length = length
 
+    def no_wrist_ikine(self, target):
+
+        # Target [x, y, z]
+
+        if self.n_variables != 6:
+            return
+        
+        d1 = self.links[2].a
+        d2 = self.links[3].d
+
+        wx = target[0]
+        wy = target[1]
+        wz = target[2]
+
+        r = sqrt(wx ** 2 + wy ** 2)
+
+        q1 = atan2(wy, wx)
+        q2 = -acos((r ** 2 + wz ** 2 + d1 ** 2 - d2 ** 2) / (2*sqrt(r ** 2 + wz ** 2)*d1)) - atan2(wz, r)
+        q3 = pi/2 - acos((d2 ** 2 + d1 ** 2 - (r ** 2 + wz ** 2)) / (2*d2*d1))
+
+        return [q1.evalf(), q2.evalf(), q3.evalf()]
+
+
 
     def ikine(self, target):
 

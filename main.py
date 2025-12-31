@@ -80,8 +80,10 @@ def inverse_kinematics_test(servo_controller: ServoController):
             "wrist": 0,
             "end_effector_base": 0}
 
+    orientation = [zero["forearm"], zero["wrist"], 0]
+
     robot = my_robot()
-    previous_coordinates = [300, -300, 500, 0, 0, 0]
+    previous_coordinates = [300, 0, 500, orientation[0], orientation[1], orientation[2]]
 
     inverse_kinematics_move(servo_controller, robot, cartesian_to_matrix(previous_coordinates), 3)
 
@@ -91,10 +93,14 @@ def inverse_kinematics_test(servo_controller: ServoController):
             x = int(input("x: "))
             y = int(input("y: "))
             z = int(input("z: "))
+            a = zero["forearm"]
+            b = zero["wrist"]
+            g = x + y
+
         except:
             break
         
-        coordinates = [x, y, z, 0, 0, 0]
+        coordinates = [x, y, z, a, b, g]
 
         for i in range(100):
             
@@ -115,7 +121,7 @@ def inverse_kinematics_move(servo_controller, robot, coordinates, time = 0):
 
     q = robot.ikine(coordinates)
     servo_data = convert_to_servo_data(q.evalf(10))
-    print_servo_data(servo_data)
+    #print_servo_data(servo_data)
 
     if time == 0:
         servo_controller.move_servos(servo_data)
