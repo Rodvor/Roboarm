@@ -16,16 +16,16 @@ def main():
     resting_pos = {"base": 0,
                 "shoulder": 0,
                 "elbow": 0,
-                "forearm": -90,
-                "wrist": 90,
-                "end_effector_base": -90}
+                "forearm": 90,
+                "wrist": -90,
+                "end_effector_base": 90}
     
     default_pos = {"base": 0,
-                "shoulder": -25,
-                "elbow": 90,
-                "forearm": -90,
-                "wrist": 90,
-                "end_effector_base": -25}
+                "shoulder": 25,
+                "elbow": -90,
+                "forearm": 90,
+                "wrist": -90,
+                "end_effector_base": 25}
     
     servo_controller = ServoController()
 
