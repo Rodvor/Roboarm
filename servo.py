@@ -42,17 +42,21 @@ class Servo:
 
     def set_angle(self, angle):
 
-        # Check if angle is within software limits
-        if angle > self.angle_range[1] or angle < self.angle_range[0]:
-            return False
+        # Check that angle is not going over bounds
+        max_angle = self.angle_range[1]
+        min_angle = self.angle_range[0]
+
+        if angle > max_angle:
+            angle = max_angle
+        
+        if angle < min_angle:
+            angle = min_angle
 
         # Set angle
         self.angle = angle
 
         # Update pulse
         self.update_pulse()
-
-        return True
 
     def set_angular_velocity(self, angular_velocity, radians = True):
 
@@ -77,8 +81,11 @@ class Servo:
 
 
     def move(self, angle, angular_velocity, radians = True):
-
+        
+        # Update angular velocity first
         self.set_angular_velocity(angular_velocity, radians)
+
+        # Set angle
         self.set_angle(angle)
 
     def update_pulse(self):
