@@ -9,7 +9,7 @@ int targetPulses[NUM_SERVOS] = {0};     // target microsecond command
 unsigned int moveIntervals[NUM_SERVOS] = {15}; // ms per µs
 bool isMoving[NUM_SERVOS] = {false};
 unsigned long lastMoveTimes[NUM_SERVOS] = {0};
-const int servoZeroPulse[NUM_SERVOS] = {1574, 1500, 1444, 1437, 1440, 1500, 1515, 1456, 500, 1500};
+const int servoZeroPulse[NUM_SERVOS] = {1574, 1500, 1444, 1552, 1440, 1500, 1515, 1456, 500, 1500};
 
 // Valid servo pulse range
 const int MIN_PULSE = 500;
