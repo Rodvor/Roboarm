@@ -16,20 +16,34 @@ def main():
                 "end_effector_base": 0}
     
     resting_pos = {"base": 0,
-                "shoulder": 0,
-                "elbow": 0,
-                "forearm": 90,
-                "wrist": -90,
+                "shoulder": -30,
+                "elbow": 90,
+                "forearm": 0,
+                "wrist": -30,
                 "end_effector_base": 90}
     
-    pos1 = {"base": 0,
-                "shoulder": 25,
-                "elbow": -90,
-                "forearm": 90,
-                "wrist": -90,
-                "end_effector_base": 25}
+    pos1 = {"base": 20,
+                "shoulder": 30,
+                "elbow": 30,
+                "forearm": 40,
+                "wrist": -30,
+                "end_effector_base": 50}
     
-    play_poses = [pos1]
+    pos2 = {"base": -45,
+                "shoulder": 20,
+                "elbow": 55,
+                "forearm": 74,
+                "wrist": -3,
+                "end_effector_base": 20}
+    
+    pos3 = {"base": 30,
+                "shoulder": -50,
+                "elbow": 90,
+                "forearm": 83,
+                "wrist": 90,
+                "end_effector_base": -55}
+    
+    play_poses = [pos1, pos2, pos3]
     
     # Init servo controller
     servo_controller = ServoController()
