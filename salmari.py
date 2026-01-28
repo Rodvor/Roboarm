@@ -60,8 +60,13 @@ servo_controller.third_order_move(resting_pos, 2)
 def salmari():
 
     if not busy.acquire(blocking=False):
-        return "Pouring salmari..."
+        return "Busy pouring... please wait."
+    
+    threading.Thread(target=pour, daemon=True).start()
 
+    return "Pouring salmari!"
+
+def pour():
     try:
         servo_controller.third_order_move(pre_pour_pos, 2)
         sleep(1)
@@ -74,7 +79,7 @@ def salmari():
     finally:
         busy.release()
 
-    return "Salmari poured!"
+
 
 @app.route("/salmari")
 def salmari_route():
