@@ -4,8 +4,10 @@ from kinematics import *
 from numpy import pi
 from time import sleep
 from flask import Flask
+import threading
 
 app = Flask(__name__)
+busy = threading.Lock()
 
 
 # All positions
@@ -56,14 +58,21 @@ servo_controller.third_order_move(resting_pos, 2)
 
 
 def salmari():
-    servo_controller.third_order_move(pre_pour_pos, 2)
-    sleep(1)
-    servo_controller.third_order_move(pouring_pos, [1, 1, 1, 1.2, 1, 1])
-    sleep(1)
-    servo_controller.third_order_move(post_pour_pos, [1.4, 2.6, 3, 3, 3, 2])
-    sleep(1)
-    servo_controller.third_order_move(resting_pos, 2)
-    sleep(1)
+
+    if not busy.acquire(blocking=False):
+        return "Pouring salmari..."
+
+    try:
+        servo_controller.third_order_move(pre_pour_pos, 2)
+        sleep(1)
+        servo_controller.third_order_move(pouring_pos, [1, 1, 1, 1.2, 1, 1])
+        sleep(1)
+        servo_controller.third_order_move(post_pour_pos, [1.4, 2.6, 3, 3, 3, 2])
+        sleep(1)
+        servo_controller.third_order_move(resting_pos, 2)
+        sleep(1)
+    finally:
+        busy.release()
 
     return "Salmari poured!"
 
