@@ -105,6 +105,7 @@ class Servo:
 
         # Used to precalculate third order polynomial terms such that they
         # don't have to be recalculated on every step
+        self.max_time = max_time
         a0 = self.angle
         a1 = 0
         a2 = 3 / (max_time**2) * (final_angle - self.angle)
@@ -117,6 +118,9 @@ class Servo:
 
         # Move according to third order polynomial
         # calculate_third_poly_terms must be ran before this
+
+        if t >= self.max_time:
+            t = self.max_time
 
         a3 = self.polynomial_terms[0]
         a2 = self.polynomial_terms[1]

@@ -20,54 +20,59 @@ def main():
                 "wrist": -90,
                 "end_effector_base": 90}
     
-    default_pos = {"base": 0,
+    default_pos = {"base": -21,
                 "shoulder": 25,
-                "elbow": -90,
+                "elbow": 50,
                 "forearm": 90,
                 "wrist": -90,
                 "end_effector_base": 25}
+
+    pre_pour_pos = {"base": -33,
+                "shoulder": 25,
+                "elbow": 60,
+                "forearm": 10,
+                "wrist": -90,
+                "end_effector_base": 0}
+
+    post_pour_pos = {"base": -30,
+                "shoulder": 20,
+                "elbow": 85,
+                "forearm": 35,
+                "wrist": -90,
+                "end_effector_base": -5}
+
+    pouring_pos = {"base": -18,
+                "shoulder": 25,
+                "elbow": 60,
+                "forearm": -41,
+                "wrist": -90,
+                "end_effector_base": 0}
     
     servo_controller = ServoController()
 
-    input("Start moving?")
+    input("Init arduino?")
     servo_controller.auto_detect_arduino()
+    input("Move?")
     servo_controller.third_order_move(resting_pos, 2)
-    servo_controller.third_order_move(default_pos, 2)
+    #servo_controller.third_order_move(default_pos, 2)
 
     robot = my_robot()
 
     while True:
 
         try:
-            print("-----------------------------")
-            x = int(input("x: "))
-            y = int(input("y: "))
-            z = int(input("z: "))
+            int(input("Pour?"))
         except:
             break
-
-        thetas = robot.no_wrist_ikine([x,y,z])
-        new_base = thetas[0] * 180/pi
-        new_shoulder = thetas[1] * 180/pi
-        new_elbow = thetas[2] * 180/pi
-
-        new_pos = {"base": new_base,
-                "shoulder": new_shoulder,
-                "elbow": new_elbow,
-                "forearm": -90,
-                "wrist": 90,
-                "end_effector_base": -90 + new_shoulder + new_elbow}
-
-        print(new_pos)
-
-        if input("are you sure: ") != "":
-            continue
+        servo_controller.third_order_move(pre_pour_pos, 2)
+        sleep(1)
+        servo_controller.third_order_move(pouring_pos, [1, 1, 1, 1.2, 1, 1])
+        sleep(1)
+        servo_controller.third_order_move(post_pour_pos, [1.4, 2.6, 3, 3, 3, 2])
+        sleep(1)
+        servo_controller.third_order_move(resting_pos, 2)
+        sleep(1)
         
-
-        servo_controller.third_order_move(new_pos, 2)
-
-
-
 
     
     input("Press enter to continue")

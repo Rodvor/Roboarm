@@ -122,17 +122,44 @@ class ServoController():
     def third_order_move(self, servo_data, time):
         """
         servo_data = {name : angle}
+
         """
 
-        for servo_name in servo_data.keys():
-            
-            for servo in self.servos[servo_name]:
+        time_is_list = False
+        repeat_time = 0
 
-                servo.calculate_third_poly_terms(servo_data[servo_name], time)
+        try:
+            float(time)
+            repeat_time = time
+        except:
+            if len(servo_data.keys()) != len(time):
+                print("Time list is not correct size")
+                time_is_list = False
+                time = 5
+            else:
+                time_is_list = True
+                repeat_time = max(time)
+
+
+        if time_is_list:
+
+                for n, servo_name in enumerate(servo_data.keys()):
+                
+                    for servo in self.servos[servo_name]:
+
+                        servo.calculate_third_poly_terms(servo_data[servo_name], time[n])
+            
+        else:
+
+            for servo_name in servo_data.keys():
+                
+                for servo in self.servos[servo_name]:
+
+                    servo.calculate_third_poly_terms(servo_data[servo_name], time)
         
         my_timer = Timer()
 
-        while my_timer.seconds() <= time:
+        while my_timer.seconds() <= repeat_time:
             
             for servo_name in servo_data.keys():
                 
