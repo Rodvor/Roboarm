@@ -69,13 +69,12 @@ def salmari():
 def pour():
     try:
         servo_controller.third_order_move(pre_pour_pos, 2)
-        sleep(1)
+        sleep(0.2)
         servo_controller.third_order_move(pouring_pos, [1, 1, 1, 1.2, 1, 1])
-        sleep(1)
+        sleep(1) # Pour for one second
         servo_controller.third_order_move(post_pour_pos, [1.4, 2.6, 3, 3, 3, 2])
-        sleep(1)
+        sleep(0.2)
         servo_controller.third_order_move(resting_pos, 2)
-        sleep(1)
     finally:
         busy.release()
 
